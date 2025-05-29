@@ -113,6 +113,10 @@ void imprimirLista(Lista *lista)
 
 void liberarLista(Lista *lista)
 {
+    lista->head = NULL;
+    lista->tail = NULL;
+    lista->size = 0;
+    free(lista);
 }
 
 int main()
