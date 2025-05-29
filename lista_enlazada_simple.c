@@ -45,31 +45,37 @@ void insertarAlFinal(Lista *lista, int dato)
 {
     Nodo *nodoPrincipio = crearNodo(dato);
 
-    if (lista->size == 0) {
+    if (lista->size == 0)
+    {
         lista->head = nodoPrincipio;
         lista->tail = nodoPrincipio;
         nodoPrincipio->next = NULL;
-    } else {
+    }
+    else
+    {
         nodoPrincipio->next = lista->head;
         lista->head = nodoPrincipio;
     }
 
-    lista->size ++;
+    lista->size++;
 }
 
 void eliminarNodo(Lista *lista, int dato)
 {
     Nodo *nodoFinal = crearNodo(dato);
-    if (lista->size == 0) {
+    if (lista->size == 0)
+    {
         lista->head = nodoFinal;
         lista->tail = nodoFinal;
         nodoFinal->next = NULL;
-    } else {
+    }
+    else
+    {
         lista->tail->next = nodoFinal;
         lista->tail = nodoFinal;
         nodoFinal->next = NULL;
     }
-    lista->size ++;
+    lista->size++;
 }
 
 Nodo *buscarNodo(Lista *lista, int dato)
@@ -77,11 +83,15 @@ Nodo *buscarNodo(Lista *lista, int dato)
     Nodo *nodoActual = lista->head;
     Nodo *nodoBuscado = NULL;
 
-    while (nodoActual != NULL) {
-        if (nodoActual->dato == dato) {
+    while (nodoActual != NULL)
+    {
+        if (nodoActual->dato == dato)
+        {
             nodoBuscado = nodoActual;
             break;
-        } else {
+        }
+        else
+        {
             nodoActual = nodoActual->next;
         }
     }
@@ -90,6 +100,15 @@ Nodo *buscarNodo(Lista *lista, int dato)
 
 void imprimirLista(Lista *lista)
 {
+    Nodo *nodoActual = lista->head;
+    printf("Elementos de la lista: \n");
+    printf("[\n");
+    for (int i = 0; i < lista->size; i++)
+    {
+        printf("%d\n", nodoActual->dato);
+        nodoActual = nodoActual->next;
+    }
+    printf("]\n");
 }
 
 void liberarLista(Lista *lista)
