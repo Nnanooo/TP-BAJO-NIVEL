@@ -43,10 +43,33 @@ void insertarAlInicio(Lista *lista, int dato)
 
 void insertarAlFinal(Lista *lista, int dato)
 {
+    Nodo *nodoPrincipio = crearNodo(dato);
+
+    if (lista->size == 0) {
+        lista->head = nodoPrincipio;
+        lista->tail = nodoPrincipio;
+        nodoPrincipio->next = NULL;
+    } else {
+        nodoPrincipio->next = lista->head;
+        lista->head = nodoPrincipio;
+    }
+
+    lista->size ++;
 }
 
 void eliminarNodo(Lista *lista, int dato)
 {
+    Nodo *nodoFinal = crearNodo(dato);
+    if (lista->size == 0) {
+        lista->head = nodoFinal;
+        lista->tail = nodoFinal;
+        nodoFinal->next = NULL;
+    } else {
+        lista->tail->next = nodoFinal;
+        lista->tail = nodoFinal;
+        nodoFinal->next = NULL;
+    }
+    lista->size ++;
 }
 
 Nodo *buscarNodo(Lista *lista, int dato)
