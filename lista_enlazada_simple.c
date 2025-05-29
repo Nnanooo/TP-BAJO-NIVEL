@@ -51,6 +51,18 @@ void eliminarNodo(Lista *lista, int dato)
 
 Nodo *buscarNodo(Lista *lista, int dato)
 {
+    Nodo *nodoActual = lista->head;
+    Nodo *nodoBuscado = NULL;
+
+    while (nodoActual != NULL) {
+        if (nodoActual->dato == dato) {
+            nodoBuscado = nodoActual;
+            break;
+        } else {
+            nodoActual = nodoActual->next;
+        }
+    }
+    return nodoBuscado;
 }
 
 void imprimirLista(Lista *lista)
