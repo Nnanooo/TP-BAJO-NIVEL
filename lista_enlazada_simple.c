@@ -121,4 +121,81 @@ void liberarLista(Lista *lista)
 
 int main()
 {
+    int opcion = 0;
+    int datoAAgregar;
+    int datoAEliminar;
+    int datoABuscar;
+    Lista *nuevaLista = (Lista *)malloc(sizeof(Lista));
+    nuevaLista->size = 0;
+
+    do
+    {
+        printf("Lista Enlazada \n\n");
+        printf("Opción 1: Insertar un elemento al inicio de la lista\n");
+        printf("Opción 2: Insertar un elemento al final de la lista\n");
+        printf("Opción 3: Eliminar un elemento de la lista\n");
+        printf("Opción 4: Buscar un elemento en la lista\n");
+        printf("Opción 5: Imprimir todos los elementos de la lista\n");
+        printf("Opción 6: Liberar la memoria utilizada por la lista\n");
+        printf("Opción 7: Salir\n");
+        printf("\nIngrese una opción: ");
+
+        scanf("%d", &opcion);
+
+        switch (opcion)
+        {
+        case 1:
+            printf("Ingrese el número a agregar al principio de la lista: ");
+            scanf("%d", &datoAAgregar);
+
+            insertarAlInicio(nuevaLista, datoAAgregar);
+            break;
+
+        case 2:
+            printf("Ingrese el número a agregar al final de la lista: ");
+            scanf("%d", &datoAAgregar);
+
+            insertarAlFinal(nuevaLista, datoAAgregar);
+            break;
+
+        case 3:
+            printf("Ingrese el número a eliminar de la lista: ");
+            scanf("%d", &datoAEliminar);
+
+            eliminarNodo(nuevaLista, datoAEliminar);
+            break;
+
+        case 4:
+            printf("Ingrese el número a buscar en la lista: ");
+            scanf("%d", &datoABuscar);
+
+            Nodo *nodoEncontrado = buscarNodo(nuevaLista, datoABuscar);
+            if (nodoEncontrado != NULL)
+            {
+                printf("El elemento buscado se encuentra en la lista\n");
+            }
+            else
+            {
+                printf("El elemento buscado no se encuentra en la lista\n");
+            }
+            // retornamos el nodo o que retornamos?
+            break;
+
+        case 5:
+            imprimirLista(nuevaLista);
+            break;
+
+        case 6:
+            liberarLista(nuevaLista);
+            printf("Memoria liberada\n");
+            break;
+
+        case 7:
+            printf("Usted ha salido del menú\n");
+            exit(EXIT_SUCCESS);
+
+        default:
+            printf("Opción inválida, intente nuevamente\n");
+        }
+    } while (opcion != 7);
 }
