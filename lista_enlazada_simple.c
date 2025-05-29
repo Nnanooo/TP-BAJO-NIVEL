@@ -24,6 +24,21 @@ Nodo *crearNodo(int dato)
 
 void insertarAlInicio(Lista *lista, int dato)
 {
+    Nodo *nodoPrincipio = crearNodo(dato);
+
+    if (lista->size == 0)
+    {
+        lista->head = nodoPrincipio;
+        lista->tail = nodoPrincipio;
+        nodoPrincipio->next = NULL;
+    }
+    else
+    {
+        nodoPrincipio->next = lista->head;
+        lista->head = nodoPrincipio;
+    }
+
+    lista->size++;
 }
 
 void insertarAlFinal(Lista *lista, int dato)
