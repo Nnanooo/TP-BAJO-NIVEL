@@ -53,8 +53,9 @@ void insertarAlFinal(Lista *lista, int dato)
     }
     else
     {
-        nodoNuevo->next = lista->head;
-        lista->head = nodoNuevo;
+        lista->tail->next = nodoNuevo;
+        lista->tail = nodoNuevo;
+        nodoNuevo->next = NULL;
     }
 
     lista->size++;
