@@ -62,20 +62,41 @@ void insertarAlFinal(Lista *lista, int dato)
 
 void eliminarNodo(Lista *lista, int dato)
 {
-    Nodo *nodoFinal = crearNodo(dato);
-    if (lista->size == 0)
-    {
-        lista->head = nodoFinal;
-        lista->tail = nodoFinal;
-        nodoFinal->next = NULL;
+    Nodo *nodoActual = lista->head;
+
+    int tam = lista->size;
+
+    if (nodoActual != NULL) {
+        //por si es el primer elemento de la lista el que hay que borrar
+        if (nodoActual->dato == dato) {
+            lista->head = nodoActual->next;
+            free(nodoActual);
+            lista->size --;
+        } else {
+            for(int i = 0; i < lista->size; i++) {
+                if ((nodoActual->next != NULL) && nodoActual->next->dato == dato) {
+                    //guardo la copia del puntero a borrar
+                    Nodo *nodoAEliminar = nodoActual->next;
+                    //cambio el next 
+                    nodoActual->next = nodoActual->next->next;
+                    //libero el lugar donde esta la copia
+                    free(nodoAEliminar);
+                    
+                    if (nodoActual->next == NULL) {
+                        lista->tail = nodoActual;
+                    }
+                    lista->size --;
+                    break;
+                } else {
+                    nodoActual = nodoActual->next;
+                }
+            }
+        }
     }
-    else
-    {
-        lista->tail->next = nodoFinal;
-        lista->tail = nodoFinal;
-        nodoFinal->next = NULL;
+
+    if (tam == lista->size) {
+        printf("Elemento no encontrado\n\n");
     }
-    lista->size++;
 }
 
 Nodo *buscarNodo(Lista *lista, int dato)
@@ -178,7 +199,6 @@ int main()
             {
                 printf("El elemento buscado no se encuentra en la lista\n");
             }
-            // retornamos el nodo o que retornamos?
             break;
 
         case 5:
