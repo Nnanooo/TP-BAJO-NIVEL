@@ -19,15 +19,17 @@ typedef struct ListaMaterias
     NodoMateria *tail;
     int size;
 } ListaMaterias;
+ 
+NodoMateria *crearNodoMateria(struct Materia dato);
 
-NodoMateria *crearNodo(struct Materia dato);
+void insertarMateriaAlInicio(ListaMaterias *lista, struct Materia dato);
 
-void insertarAlInicio(ListaMaterias *lista, struct Materia dato);
+void insertarMateriaAlFinal(ListaMaterias *lista, struct Materia dato);
 
-void insertarAlFinal(ListaMaterias *lista, struct Materia dato);
+NodoMateria *buscarMateria(ListaMaterias *lista, char nombreMateria[]);
 
-void eliminarNodo(ListaMaterias *lista, struct Materia dato);
+void eliminarMateria(ListaMaterias *lista, char nombreMateria[]);
 
-NodoMateria *buscarNodo(ListaMaterias *lista, struct Materia dato);
+void listarMaterias(ListaMaterias *lista);
 
 #endif

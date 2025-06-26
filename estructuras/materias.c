@@ -1,117 +1,109 @@
 #include "materia.h"
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-NodoMateria *crearNodo(struct Materia dato)
-{
-    NodoMateria *nodoNuevo = (NodoMateria *)malloc(sizeof(NodoMateria));
-    nodoNuevo->dato = dato;
-    nodoNuevo->next = NULL;
-    return nodoNuevo;
+NodoMateria *crearNodoMateria(struct Materia dato) {
+  NodoMateria *nodoNuevo = (NodoMateria *)malloc(sizeof(NodoMateria));
+  nodoNuevo->dato = dato;
+  nodoNuevo->next = NULL;
+  return nodoNuevo;
 }
 
-void insertarAlInicio(ListaMaterias *lista, struct Materia dato)
-{
-    NodoMateria *nodoPrincipio = crearNodo(dato);
+void insertarMateriaAlInicio(ListaMaterias *lista, struct Materia dato) {
+    //Si la materia no está dentro de ListaMaterias, se agrega
+    if (buscarMateria(lista, dato.nombreMateria) == NULL) {
+        NodoMateria *nodoPrincipio = crearNodoMateria(dato);
 
-    if (lista->size == 0)
-    {
-        lista->head = nodoPrincipio;
-        lista->tail = nodoPrincipio;
-        nodoPrincipio->next = NULL;
-    }
-    else
-    {
-        nodoPrincipio->next = lista->head;
-        lista->head = nodoPrincipio;
-    }
+        if (lista->size == 0) {
+            lista->head = nodoPrincipio;
+            lista->tail = nodoPrincipio;
+            nodoPrincipio->next = NULL;
+        } else {
+            nodoPrincipio->next = lista->head;
+            lista->head = nodoPrincipio;
+        }
 
-    lista->size++;
+        lista->size++;
+    } else {
+        printf("La materia ya se encuentra dada de alta");
+    }
 }
 
-void insertarAlFinal(ListaMaterias *lista, struct Materia dato)
-{
-    NodoMateria *nodoFinal = crearNodo(dato);
-    if (lista->size == 0)
-    {
+void insertarMateriaAlFinal(ListaMaterias *lista, struct Materia dato) {
+    //Si la materia no está dentro de ListaMaterias, se agrega
+    if (buscarMateria(lista, dato.nombreMateria) == NULL) {
+        NodoMateria *nodoFinal = crearNodoMateria(dato);
+
+        if (lista->size == 0) {
         lista->head = nodoFinal;
         lista->tail = nodoFinal;
         nodoFinal->next = NULL;
-    }
-    else
-    {
+        } else {
         lista->tail->next = nodoFinal;
         lista->tail = nodoFinal;
         nodoFinal->next = NULL;
-    }
-    lista->size++;
-}
-
-void eliminarNodo(ListaMaterias *lista, struct Materia dato)
-{
-    NodoMateria *nodoActual = lista->head;
-
-    int tam = lista->size;
-
-    if (nodoActual != NULL)
-    {
-        // por si es el primer elemento de la lista el que hay que borrar
-        if (nodoActual->dato.nombreMateria == dato.nombreMateria)
-        {
-            lista->head = nodoActual->next;
-            free(nodoActual);
-            lista->size--;
         }
-        else
-        {
-            for (int i = 0; i < lista->size; i++)
-            {
-                if ((nodoActual->next != NULL) && nodoActual->next->dato.nombreMateria == dato.nombreMateria)
-                {
-                    // guardo la copia del puntero a borrar
-                    NodoMateria *nodoAEliminar = nodoActual->next;
-                    // cambio el next
-                    nodoActual->next = nodoActual->next->next;
-                    // libero el lugar donde esta la copia
-                    free(nodoAEliminar);
-
-                    if (nodoActual->next == NULL)
-                    {
-                        lista->tail = nodoActual;
-                    }
-                    lista->size--;
-                    break;
-                }
-                else
-                {
-                    nodoActual = nodoActual->next;
-                }
-            }
-        }
-    }
-
-    if (tam == lista->size)
-    {
-        printf("Elemento no encontrado\n\n");
+        
+        lista->size++;
+    } else {
+        printf("La materia ya se encuentra dada de alta");
     }
 }
 
-NodoMateria *buscarNodo(ListaMaterias *lista, struct Materia dato)
-{
-    NodoMateria *nodoActual = lista->head;
-    NodoMateria *nodoBuscado = NULL;
+NodoMateria *buscarMateria(ListaMaterias *lista, char nombreMateria[]) {
+  NodoMateria *nodoActual = lista->head;
+  NodoMateria *nodoBuscado = NULL;
 
-    while (nodoActual != NULL)
-    {
-        if (nodoActual->dato.nombreMateria == dato.nombreMateria)
-        {
-            nodoBuscado = nodoActual;
-            break;
-        }
-        else
-        {
-            nodoActual = nodoActual->next;
-        }
+  while (nodoActual != NULL) {
+    if (nodoActual->dato.nombreMateria == nombreMateria) {
+      nodoBuscado = nodoActual;
+      break;
+    } else {
+      nodoActual = nodoActual->next;
     }
-    return nodoBuscado;
+  }
+  return nodoBuscado;
+}
+
+void eliminarMateria(ListaMaterias *lista, char nombreMateria[]) {
+  NodoMateria *nodoActual = lista->head;
+
+  int tam = lista->size;
+
+  if (nodoActual != NULL) {
+    // por si es el primer elemento de la lista el que hay que borrar
+    if (nodoActual->dato.nombreMateria == nombreMateria) {
+      lista->head = nodoActual->next;
+      free(nodoActual);
+      lista->size--;
+    } else {
+      for (int i = 0; i < lista->size; i++) {
+        if ((nodoActual->next != NULL) &&
+            nodoActual->next->dato.nombreMateria == nombreMateria) {
+          // guardo la copia del puntero a borrar
+          NodoMateria *nodoAEliminar = nodoActual->next;
+          // cambio el next
+          nodoActual->next = nodoActual->next->next;
+          // libero el lugar donde esta la copia
+          free(nodoAEliminar);
+
+          if (nodoActual->next == NULL) {
+            lista->tail = nodoActual;
+          }
+          lista->size--;
+          break;
+        } else {
+          nodoActual = nodoActual->next;
+        }
+      }
+    }
+  }
+
+  if (tam == lista->size) {
+    printf("Materia no encontrada\n\n");
+  }
+}
+
+void listarMaterias(ListaMaterias *lista) {
+  // IMPLEMENTAR
 }
