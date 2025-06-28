@@ -1,6 +1,7 @@
 #include "alumno.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 NodoAlumno *crearNodoAlumno(struct Alumno dato)
 {
@@ -10,44 +11,25 @@ NodoAlumno *crearNodoAlumno(struct Alumno dato)
     return nodoNuevo;
 }
 
-void insertarAlumnoAlInicio(ListaAlumnos *lista, struct Alumno dato)
+void insertarAlumno(ListaAlumnos *lista, struct Alumno dato)
 {
-    NodoAlumno *nodoPrincipio = crearNodoAlumno(dato);
-
+    NodoAlumno *nodoAInsertar = crearNodoAlumno(dato);
     if (lista->size == 0)
     {
-        lista->head = nodoPrincipio;
-        lista->tail = nodoPrincipio;
-        nodoPrincipio->next = NULL;
+        lista->head = nodoAInsertar;
+        lista->tail = nodoAInsertar;
+        nodoAInsertar->next = NULL;
     }
     else
     {
-        nodoPrincipio->next = lista->head;
-        lista->head = nodoPrincipio;
-    }
-
-    lista->size++;
-}
-
-void insertarAlumnoAlFinal(ListaAlumnos *lista, struct Alumno dato)
-{
-    NodoAlumno *nodoFinal = crearNodoAlumno(dato);
-    if (lista->size == 0)
-    {
-        lista->head = nodoFinal;
-        lista->tail = nodoFinal;
-        nodoFinal->next = NULL;
-    }
-    else
-    {
-        lista->tail->next = nodoFinal;
-        lista->tail = nodoFinal;
-        nodoFinal->next = NULL;
+        lista->tail->next = nodoAInsertar;
+        lista->tail = nodoAInsertar;
+        nodoAInsertar->next = NULL;
     }
     lista->size++;
 }
 
-void eliminarAlumno(ListaAlumnos *lista, char nombreAlumnoAEliminar[])
+void eliminarAlumno(ListaAlumnos *lista, int legajo)
 {
     NodoAlumno *nodoActual = lista->head;
 
@@ -56,7 +38,7 @@ void eliminarAlumno(ListaAlumnos *lista, char nombreAlumnoAEliminar[])
     if (nodoActual != NULL)
     {
         // por si es el primer elemento de la lista el que hay que borrar
-        if (nodoActual->dato.nombre == nombreAlumnoAEliminar)
+        if (nodoActual->dato.legajo == legajo)
         {
             lista->head = nodoActual->next;
             free(nodoActual);
@@ -66,7 +48,7 @@ void eliminarAlumno(ListaAlumnos *lista, char nombreAlumnoAEliminar[])
         {
             for (int i = 0; i < lista->size; i++)
             {
-                if ((nodoActual->next != NULL) && nodoActual->next->dato.nombre == nombreAlumnoAEliminar)
+                if ((nodoActual->next != NULL) && nodoActual->next->dato.legajo == legajo)
                 {
                     // guardo la copia del puntero a borrar
                     NodoAlumno *nodoAEliminar = nodoActual->next;
@@ -116,12 +98,76 @@ NodoAlumno *buscarAlumnoPorNombre(ListaAlumnos *lista, char nombreAlumnoBuscado[
     return nodoBuscado;
 }
 
-NodoAlumno *buscarAlumnoPorRangoDeEdad(ListaAlumnos *lista, int edadMinima, int edadMaxima)
+NodoAlumno *buscarAlumnoPorLegajo(ListaAlumnos *lista, int legajoAlumnoBuscado)
 {
-    //IMPLEMENTAR
-    return NULL;
+    NodoAlumno *nodoActual = lista->head;
+    NodoAlumno *nodoBuscado = NULL;
+
+    while (nodoActual != NULL)
+    {
+        if (nodoActual->dato.legajo == legajoAlumnoBuscado)
+        {
+            nodoBuscado = nodoActual;
+            break;
+        }
+        else
+        {
+            nodoActual = nodoActual->next;
+        }
+    }
+    return nodoBuscado;
+}
+
+ListaAlumnos *buscarAlumnoPorRangoDeEdad(ListaAlumnos *lista, int edadMinima, int edadMaxima)
+{
+    NodoAlumno *nodoActual = lista->head;
+    struct ListaAlumnos *alumnosEnRango = (struct ListaAlumnos *) malloc(sizeof(struct ListaAlumnos));
+
+    while (nodoActual != NULL)
+    {
+        if (nodoActual->dato.edad >= edadMinima && nodoActual->dato.edad <= edadMaxima)
+        {
+            insertarAlumno(alumnosEnRango, nodoActual->dato);
+        }
+        else
+        {
+            nodoActual = nodoActual->next;
+        }
+    }
+    return alumnosEnRango;
+}
+
+//Probar esto bien después por tema punteros (linea 160)
+void modificarNombreAlumno(NodoAlumno *alumnoAModificar, char nuevoNombreAlumno[]) {
+    if (strlen(nuevoNombreAlumno) <= 100) {
+        strcpy(alumnoAModificar->dato.nombre, nuevoNombreAlumno);
+    } else {
+        printf("El nuevo nombre debe incluir menos de 100 caracteres");
+    }
+}
+
+void modificarEdadAlumno(NodoAlumno *alumnoAModificar, int nuevaEdadAlumno) {
+    if (nuevaEdadAlumno >= 16) {
+        alumnoAModificar->dato.edad = nuevaEdadAlumno;
+    } else {
+        printf("La edad ingresada debe ser mayor o igual a 16");
+    }
+}
+
+void modificarLegajoAlumno(NodoAlumno *alumnoAModificar, int nuevoLegajoAlumno) {
+    if (nuevoLegajoAlumno >= 0) {
+        alumnoAModificar->dato.legajo = nuevoLegajoAlumno;
+    } else {
+        printf("El legajo ingresado debe ser mayor o igual a 0");
+    }
 }
 
 void listarAlumnos(ListaAlumnos *lista) {
-    //IMPLEMENTAR
+    NodoAlumno *nodoActual = lista->head;
+    printf("Alumnos: \n");
+    for (int i = 0; i < lista->size; i++)
+    {
+        printf("Nombre: %s  Legajo: %d  Edad: %d\n", nodoActual->dato.nombre, nodoActual->dato.legajo, nodoActual->dato.edad);
+        nodoActual = nodoActual->next;
+    }
 }

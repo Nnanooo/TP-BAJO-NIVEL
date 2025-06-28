@@ -9,39 +9,19 @@ NodoMateria *crearNodoMateria(struct Materia dato) {
   return nodoNuevo;
 }
 
-void insertarMateriaAlInicio(ListaMaterias *lista, struct Materia dato) {
+void insertarMateria(ListaMaterias *lista, struct Materia dato) {
     //Si la materia no está dentro de ListaMaterias, se agrega
     if (buscarMateria(lista, dato.nombreMateria) == NULL) {
-        NodoMateria *nodoPrincipio = crearNodoMateria(dato);
+        NodoMateria *nodoAInsertar = crearNodoMateria(dato);
 
         if (lista->size == 0) {
-            lista->head = nodoPrincipio;
-            lista->tail = nodoPrincipio;
-            nodoPrincipio->next = NULL;
+        lista->head = nodoAInsertar;
+        lista->tail = nodoAInsertar;
+        nodoAInsertar->next = NULL;
         } else {
-            nodoPrincipio->next = lista->head;
-            lista->head = nodoPrincipio;
-        }
-
-        lista->size++;
-    } else {
-        printf("La materia ya se encuentra dada de alta");
-    }
-}
-
-void insertarMateriaAlFinal(ListaMaterias *lista, struct Materia dato) {
-    //Si la materia no está dentro de ListaMaterias, se agrega
-    if (buscarMateria(lista, dato.nombreMateria) == NULL) {
-        NodoMateria *nodoFinal = crearNodoMateria(dato);
-
-        if (lista->size == 0) {
-        lista->head = nodoFinal;
-        lista->tail = nodoFinal;
-        nodoFinal->next = NULL;
-        } else {
-        lista->tail->next = nodoFinal;
-        lista->tail = nodoFinal;
-        nodoFinal->next = NULL;
+        lista->tail->next = nodoAInsertar;
+        lista->tail = nodoAInsertar;
+        nodoAInsertar->next = NULL;
         }
         
         lista->size++;
@@ -105,5 +85,37 @@ void eliminarMateria(ListaMaterias *lista, char nombreMateria[]) {
 }
 
 void listarMaterias(ListaMaterias *lista) {
-  // IMPLEMENTAR
+  NodoMateria *nodoActual = lista->head;
+    printf("Materias inscriptas del alumno: \n");
+    for (int i = 0; i < lista->size; i++)
+    {  
+        if (nodoActual->dato.aprobado) {
+          printf("Materia: %s Estado: Aprobada \n", nodoActual->dato.nombreMateria);
+        } else {
+          printf("Materia: %s Estado: Desaprobada \n", nodoActual->dato.nombreMateria);
+        }
+        nodoActual = nodoActual->next;
+    }
+}
+
+void modificarMateria(ListaMaterias *lista, char nombreMateria[], int nuevoEstado) {
+  NodoMateria *nodoActual = lista->head;
+
+  if (nuevoEstado == 0 || nuevoEstado == 1) {
+    while (nodoActual != NULL) {
+    if (nodoActual->dato.nombreMateria == nombreMateria) {
+      nodoActual->dato.aprobado = nuevoEstado;
+      printf("El estado de la materia %s ha sido modificada a %d \n", nodoActual->dato.nombreMateria,nodoActual->dato.aprobado);
+      break;
+    } else {
+      nodoActual = nodoActual->next;
+    }
+  }
+
+  if (nodoActual == NULL) {
+    printf("Materia a modificar no encontrada\n\n");
+  }
+  } else {
+    printf("El nuevo estado debe ser 0 (desaprobado) o 1 (aprobado)");
+  }
 }
