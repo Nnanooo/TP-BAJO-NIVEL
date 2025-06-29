@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "estructuras/alumno.h"
 #include "estructuras/materia.h"
 
@@ -28,13 +29,12 @@ int main()
         case 1:
             do
             {
-                printf("Estudiantes \n\n");
+                printf("\nEstudiantes \n\n");
                 printf("Opción 1: Ingresar a un nuevo estudiante\n");
                 printf("Opción 2: Modificar datos de un estudiante\n");
                 printf("Opción 3: Dar de baja a un estudiante\n");
                 printf("Opción 4: Listar todos los estudiantes ingresados\n");
-                // hay quilombos con nombres y apellidos iguales debatir eso
-                printf("Opción 5: Buscar a un estudiante por nombre\n");
+                printf("Opción 5: Buscar a un estudiante por nombre y apellido\n");
                 printf("Opción 6: Buscar a estudiantes por rango de edad\n");
                 printf("Opción 7: Volver al menú principal\n");
 
@@ -44,14 +44,24 @@ int main()
                 case 1:
                 {
                     Alumno alumnoAInsertar;
-                    // Separar nombre y apellido en la struct alumno
                     printf("Inserte el nombre del alumno: ");
                     scanf("%s", alumnoAInsertar.nombre);
+                    printf("Ingrese el apellido del alumno: ");
+                    scanf("%s", alumnoAInsertar.apellido);
                     printf("Inserte el legajo del alumno: ");
                     scanf("%d", &alumnoAInsertar.legajo);
+                    if (buscarAlumnoPorLegajo(alumnos, alumnoAInsertar.legajo))
+                    {
+                        printf("\nLegajo repetido, ingrese un legajo distinto\n");
+                        break;
+                    }
                     printf("Inserte la edad del alumno: ");
                     scanf("%d", &alumnoAInsertar.edad);
-
+                    if (alumnoAInsertar.edad < 16 || alumnoAInsertar.edad > 90)
+                    {
+                        printf("\nEdad invalida, el alumno debe de ser mayor o igual a 16 y menor a 90\n");
+                        break;
+                    }
                     insertarAlumno(alumnos, alumnoAInsertar);
 
                     alumnos->size = alumnos->size++;
@@ -62,6 +72,7 @@ int main()
                 {
                     int legajoAlumnoAModificar;
                     int opcionAModificar;
+                    listarAlumnos(alumnos);
                     printf("Ingrese el legajo del alumno a modificar: ");
                     scanf("%d", &legajoAlumnoAModificar);
 
@@ -81,24 +92,24 @@ int main()
                         {
                         case 1:
                         {
-                            char nuevoNombreAlumno[100];
+                            char nuevoNombreAlumno[25];
                             printf("Ingrese el nuevo nombre: ");
                             scanf("%s", nuevoNombreAlumno);
 
                             modificarNombreAlumno(buscarAlumnoPorLegajo(alumnos, legajoAlumnoAModificar), nuevoNombreAlumno);
-                            printf("Nombre cambiado exitosamente\n\n");
+                            printf("\nNombre cambiado exitosamente\n\n");
                             break;
                         }
                         // IMPLEMENTAR APELLIDO EN STRUCT ALUMNO ANTES DE MODIFICAR
                         case 2:
                         {
-                            char nuevoApellidoAlumno[100];
+                            char nuevoApellidoAlumno[25];
                             printf("Ingrese el nuevo apellido: ");
                             scanf("%s", nuevoApellidoAlumno);
 
-                            modificarNombreAlumno(buscarAlumnoPorLegajo(alumnos, legajoAlumnoAModificar), nuevoApellidoAlumno);
+                            modificarApellidoAlumno(buscarAlumnoPorLegajo(alumnos, legajoAlumnoAModificar), nuevoApellidoAlumno);
 
-                            printf("Apellido cambiado exitosamente\n\n");
+                            printf("\nApellido cambiado exitosamente\n\n");
                             break;
                         }
                         case 3:
@@ -109,7 +120,10 @@ int main()
 
                             modificarEdadAlumno(buscarAlumnoPorLegajo(alumnos, legajoAlumnoAModificar), nuevaEdadAlumno);
 
-                            printf("Edad cambiada exitosamente\n\n");
+                            if (buscarAlumnoPorLegajo(alumnos, legajoAlumnoAModificar)->dato.edad == nuevaEdadAlumno)
+                            {
+                                printf("\nEdad cambiada exitosamente\n\n");
+                            }
                             break;
                         }
                         case 4:
@@ -120,7 +134,7 @@ int main()
 
                             modificarLegajoAlumno(buscarAlumnoPorLegajo(alumnos, legajoAlumnoAModificar), nuevoLegajoAlumno);
 
-                            printf("Legajo cambiado exitosamente\n\n");
+                            printf("\nLegajo cambiado exitosamente\n\n");
                             break;
                         }
                         case 5:
@@ -131,7 +145,7 @@ int main()
                     }
                     else
                     {
-                        printf("El alumno con el legajo solicitado no existe\n\n");
+                        printf("\nEl alumno con el legajo solicitado no existe\n\n");
                     }
                     break;
                 }
@@ -156,9 +170,56 @@ int main()
                     listarAlumnos(alumnos);
                     break;
                 case 5:
+                {
+                    char nombreBuscado[25];
+                    char apellidoBuscado[25];
+
+                    printf("Ingrese el nombre del alumno buscado: ");
+                    scanf("%s", nombreBuscado);
+                    printf("Ingrese el apellido del alumno buscado: ");
+                    scanf("%s", apellidoBuscado);
+
+                    NodoAlumno *alumnoBuscado = buscarAlumnoPorNombreYApellido(alumnos, nombreBuscado, apellidoBuscado);
+                    if (alumnoBuscado == NULL)
+                    {
+                        printf("\nAlumno no encontrado\n");
+                    }
+                    else
+                    {
+                        printf("\n Nombre: %s \n Apellido: %s \n Legajo: %d \n Edad: %d\n ", alumnoBuscado->dato.nombre, alumnoBuscado->dato.apellido, alumnoBuscado->dato.legajo, alumnoBuscado->dato.edad);
+                        // listarMaterias(alumnoBuscado->dato.materias);
+                    }
+
                     break;
+                }
                 case 6:
+                {
+                    int edadMinima;
+                    int edadMaxima;
+
+                    printf("Ingrese edad minima del rango buscado: ");
+                    scanf("%d", &edadMinima);
+                    printf("Ingrese edad maxima del rango buscado: ");
+                    scanf("%d", &edadMaxima);
+
+                    if (edadMaxima < edadMinima)
+                    {
+                        printf("\nRango invalido\n");
+                    }
+                    else
+                    {
+                        ListaAlumnos *alumnosEncontrados = buscarAlumnoPorRangoDeEdad(alumnos, edadMinima, edadMaxima);
+                        if (alumnosEncontrados->size == 0)
+                        {
+                            printf("\nAlumnos no encontrados dentro de ese rango.\n");
+                        }
+                        else
+                        {
+                            listarAlumnos(alumnosEncontrados);
+                        }
+                    }
                     break;
+                }
                 case 7:
                     break;
                 }
@@ -168,7 +229,7 @@ int main()
         case 2:
             do
             {
-                printf("Materias \n\n");
+                printf("\nMaterias \n\n");
                 printf("Opción 1: Crear una nueva materia\n");
                 printf("Opción 2: Anotar a un estudiante a una materia\n");
                 printf("Opción 3: Modificar materia de un estudiante\n");

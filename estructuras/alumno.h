@@ -4,18 +4,21 @@
 
 typedef struct Alumno
 {
-    char nombre[100];
+    char nombre[25];
+    char apellido[25];
     int edad;
     int legajo;
-    struct ListaMaterias materias;
+    struct ListaMaterias *materias;
 } Alumno;
 
-typedef struct NodoAlumno {
+typedef struct NodoAlumno
+{
     struct Alumno dato;
     struct NodoAlumno *next;
 } NodoAlumno;
 
-typedef struct ListaAlumnos {
+typedef struct ListaAlumnos
+{
     NodoAlumno *head;
     NodoAlumno *tail;
     int size;
@@ -27,14 +30,14 @@ void insertarAlumno(ListaAlumnos *lista, struct Alumno dato);
 
 void eliminarAlumno(ListaAlumnos *lista, int legajo);
 
-NodoAlumno *buscarAlumnoPorNombre(ListaAlumnos *lista, char nombreAlumnoBuscado[]);
+NodoAlumno *buscarAlumnoPorNombreYApellido(ListaAlumnos *lista, char nombreAlumnoBuscado[], char apellidoAlumnoBuscado[]);
 
 ListaAlumnos *buscarAlumnoPorRangoDeEdad(ListaAlumnos *lista, int edadMinima, int edadMaxima);
 
 NodoAlumno *buscarAlumnoPorLegajo(ListaAlumnos *lista, int legajoAlumnoBuscado);
 
-//Antes de llamar a alguno de las siguientes funciones ubicar al alumno por legajo
-//Por si hay 2 alumnos con mismo nombre y apellido
+// Antes de llamar a alguno de las siguientes funciones ubicar al alumno por legajo
+// Por si hay 2 alumnos con mismo nombre y apellido
 void modificarNombreAlumno(NodoAlumno *alumnoAModificar, char nuevoNombreAlumno[]);
 
 void modificarApellidoAlumno(NodoAlumno *alumnoAModificar, char nuevoApellidoAlumno[]);
