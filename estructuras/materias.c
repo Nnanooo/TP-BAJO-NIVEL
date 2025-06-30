@@ -1,6 +1,17 @@
 #include "materia.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+#include <ctype.h>
+
+void convertirMateriaAMinusculas(char *str)
+{
+    for (int i = 0; str[i] != '\0'; i++)
+    {
+        str[i] = tolower(str[i]);
+    }
+}
 
 NodoMateria *crearNodoMateria(struct Materia dato)
 {
@@ -42,10 +53,12 @@ NodoMateria *buscarMateria(ListaMaterias *lista, char nombreMateria[])
 {
   NodoMateria *nodoActual = lista->head;
   NodoMateria *nodoBuscado = NULL;
+  convertirMateriaAMinusculas(nombreMateria);
 
   while (nodoActual != NULL)
   {
-    if (nodoActual->dato.nombreMateria == nombreMateria)
+    convertirMateriaAMinusculas(nodoActual->dato.nombreMateria);
+    if (strcmp(nodoActual->dato.nombreMateria, nombreMateria) == 0)
     {
       nodoBuscado = nodoActual;
       break;
@@ -67,7 +80,7 @@ void eliminarMateria(ListaMaterias *lista, char nombreMateria[])
   if (nodoActual != NULL)
   {
     // por si es el primer elemento de la lista el que hay que borrar
-    if (nodoActual->dato.nombreMateria == nombreMateria)
+    if (strcmp(nodoActual->dato.nombreMateria, nombreMateria) == 0)
     {
       lista->head = nodoActual->next;
       free(nodoActual);
@@ -78,7 +91,7 @@ void eliminarMateria(ListaMaterias *lista, char nombreMateria[])
       for (int i = 0; i < lista->size; i++)
       {
         if ((nodoActual->next != NULL) &&
-            nodoActual->next->dato.nombreMateria == nombreMateria)
+            strcmp(nodoActual->next->dato.nombreMateria, nombreMateria) == 0)
         {
           // guardo la copia del puntero a borrar
           NodoMateria *nodoAEliminar = nodoActual->next;
@@ -108,36 +121,52 @@ void eliminarMateria(ListaMaterias *lista, char nombreMateria[])
   }
 }
 
-void listarMaterias(ListaMaterias *lista)
+void listarCatalogoDeMaterias(ListaMaterias *lista)
 {
   NodoMateria *nodoActual = lista->head;
-  printf("Materias inscriptas del alumno: \n");
+  printf("Materias disponibles: \n");
   for (int i = 0; i < lista->size; i++)
   {
-    if (nodoActual->dato.aprobado)
+    if (nodoActual->dato.estado)
     {
-      printf("Materia: %s Estado: Aprobada \n", nodoActual->dato.nombreMateria);
+      printf("Materia: %s\n", nodoActual->dato.nombreMateria);
     }
     else
     {
-      printf("Materia: %s Estado: Desaprobada \n", nodoActual->dato.nombreMateria);
+      printf("Materia: %s\n", nodoActual->dato.nombreMateria);
     }
     nodoActual = nodoActual->next;
   }
 }
 
-void modificarMateria(ListaMaterias *lista, char nombreMateria[], int nuevoEstado)
+void listarMateriasDeAlumno(ListaMaterias *lista)
 {
   NodoMateria *nodoActual = lista->head;
-
-  if (nuevoEstado == 0 || nuevoEstado == 1)
+  printf("Materias inscriptas del alumno: \n");
+  for (int i = 0; i < lista->size; i++)
   {
+    if (nodoActual->dato.estado)
+    {
+      printf("Materia: %s Estado: Aprobada Nota: %d\n", nodoActual->dato.nombreMateria, nodoActual->dato.nota);
+    }
+    else
+    {
+      printf("Materia: %s Estado: Desaprobada Nota: %d\n", nodoActual->dato.nombreMateria, nodoActual->dato.nota);
+    }
+    nodoActual = nodoActual->next;
+  }
+}
+
+void modificarEstadoMateria(ListaMaterias *lista, char nombreMateria[], bool nuevoEstado)
+{
+  NodoMateria *nodoActual = lista->head;
+  
     while (nodoActual != NULL)
     {
       if (nodoActual->dato.nombreMateria == nombreMateria)
       {
-        nodoActual->dato.aprobado = nuevoEstado;
-        printf("El estado de la materia %s ha sido modificada a %d \n", nodoActual->dato.nombreMateria, nodoActual->dato.aprobado);
+        nodoActual->dato.estado = nuevoEstado;
+        printf("El estado de la materia %s ha sido modificado a %d \n", nodoActual->dato.nombreMateria, nodoActual->dato.estado);
         break;
       }
       else
@@ -150,9 +179,29 @@ void modificarMateria(ListaMaterias *lista, char nombreMateria[], int nuevoEstad
     {
       printf("Materia a modificar no encontrada\n\n");
     }
-  }
-  else
-  {
-    printf("El nuevo estado debe ser 0 (desaprobado) o 1 (aprobado)");
-  }
+}
+
+void modificarNotaMateria(ListaMaterias *lista, char nombreMateria[], int nuevaNotaMateria)
+{
+  NodoMateria *nodoActual = lista->head;
+  
+    while (nodoActual != NULL)
+    {
+      if (nodoActual->dato.nombreMateria == nombreMateria)
+      { /*
+        nodoActual->dato.estado = nuevoEstado;
+        printf("El estado de la materia %s ha sido modificado a %d \n", nodoActual->dato.nombreMateria, nodoActual->dato.estado);
+        break;
+        */
+      }
+      else
+      {
+        nodoActual = nodoActual->next;
+      }
+    }
+
+    if (nodoActual == NULL)
+    {
+      printf("Materia a modificar no encontrada\n\n");
+    }
 }
