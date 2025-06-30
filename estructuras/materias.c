@@ -7,10 +7,10 @@
 
 void convertirMateriaAMinusculas(char *str)
 {
-    for (int i = 0; str[i] != '\0'; i++)
-    {
-        str[i] = tolower(str[i]);
-    }
+  for (int i = 0; str[i] != '\0'; i++)
+  {
+    str[i] = tolower(str[i]);
+  }
 }
 
 NodoMateria *crearNodoMateria(struct Materia dato)
@@ -157,51 +157,71 @@ void listarMateriasDeAlumno(ListaMaterias *lista)
   }
 }
 
+float promedioNota(ListaMaterias *lista)
+{
+  if (lista == NULL || lista->head == NULL || lista->size == 0)
+  {
+    return 0.0f;
+  }
+  NodoMateria *nodoActual = lista->head;
+  int contador = 0;
+  float sumaNota = 0.0f;
+
+  for (int i = 0; i < lista->size; i++)
+  {
+    sumaNota += nodoActual->dato.nota;
+    nodoActual = nodoActual->next;
+    contador++;
+  }
+
+  return sumaNota / contador;
+}
+
 void modificarEstadoMateria(ListaMaterias *lista, char nombreMateria[], bool nuevoEstado)
 {
   NodoMateria *nodoActual = lista->head;
-  
-    while (nodoActual != NULL)
-    {
-      if (nodoActual->dato.nombreMateria == nombreMateria)
-      {
-        nodoActual->dato.estado = nuevoEstado;
-        printf("El estado de la materia %s ha sido modificado a %d \n", nodoActual->dato.nombreMateria, nodoActual->dato.estado);
-        break;
-      }
-      else
-      {
-        nodoActual = nodoActual->next;
-      }
-    }
 
-    if (nodoActual == NULL)
+  while (nodoActual != NULL)
+  {
+    if (nodoActual->dato.nombreMateria == nombreMateria)
     {
-      printf("Materia a modificar no encontrada\n\n");
+      nodoActual->dato.estado = nuevoEstado;
+      printf("El estado de la materia %s ha sido modificado a %d \n", nodoActual->dato.nombreMateria, nodoActual->dato.estado);
+      break;
     }
+    else
+    {
+      nodoActual = nodoActual->next;
+    }
+  }
+
+  if (nodoActual == NULL)
+  {
+    printf("Materia a modificar no encontrada\n\n");
+  }
 }
 
 void modificarNotaMateria(ListaMaterias *lista, char nombreMateria[], int nuevaNotaMateria)
 {
   NodoMateria *nodoActual = lista->head;
-  
-    while (nodoActual != NULL)
-    {
-      if (nodoActual->dato.nombreMateria == nombreMateria)
-      { /*
-        nodoActual->dato.estado = nuevoEstado;
-        printf("El estado de la materia %s ha sido modificado a %d \n", nodoActual->dato.nombreMateria, nodoActual->dato.estado);
-        break;
-        */
-      }
-      else
-      {
-        nodoActual = nodoActual->next;
-      }
-    }
 
-    if (nodoActual == NULL)
-    {
-      printf("Materia a modificar no encontrada\n\n");
+  while (nodoActual != NULL)
+  {
+    if (nodoActual->dato.nombreMateria == nombreMateria)
+    { /*
+      nodoActual->dato.estado = nuevoEstado;
+      printf("El estado de la materia %s ha sido modificado a %d \n", nodoActual->dato.nombreMateria, nodoActual->dato.estado);
+      break;
+      */
     }
+    else
+    {
+      nodoActual = nodoActual->next;
+    }
+  }
+
+  if (nodoActual == NULL)
+  {
+    printf("Materia a modificar no encontrada\n\n");
+  }
 }
